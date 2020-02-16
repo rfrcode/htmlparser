@@ -11,9 +11,9 @@ namespace htmlparser
             string path = @"htmlToRead.html";
             string readText =  File.ReadAllText(path);
 
-            //nodo arbolDeNodos = parsearEnNodos(readText)
+            //INode arbolDeNodos = parsearEnNodos(readText)
             
-            //escribirEnConsola(arbolDeNodos)
+            //NodeWriter.Write(arbolDeNodos)
             Console.WriteLine(readText);
         }
     }
