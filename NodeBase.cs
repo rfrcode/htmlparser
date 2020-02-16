@@ -6,6 +6,8 @@ public class NodeBase:INode{
     public List<INode> Children { get => children; set => children = value; }
 
     public void Add(INode n) => children.Add(n);
+
+    public void Add(List<INode> nn) => children.AddRange(nn);
     public virtual void Open(){
 
     }
