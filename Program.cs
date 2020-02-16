@@ -11,8 +11,10 @@ namespace htmlparser
             string path = @"htmlToRead.html";
             string readText =  File.ReadAllText(path);
 
-            //NodeParser nodeParser= new NodeParser();
-            //INode nodeTree = nodeParser.Parse(readText);
+            NodeParser nodeParser= new NodeParser();
+
+            INode nodeTree = new NodeBase();
+            nodeTree.Add(nodeParser.Parse(readText));
             
             
             //NodeWriter.Write(nodeTree);
@@ -90,11 +92,22 @@ public class NodeParser{
             Pos += 8;
             return new Strong();
         }
-        else {
-            // todo mejorar
-            throw new Exception("incorrect input");
+        // todo esto se puede substituir por "para tag desconocido"
+        else if (input.Substring(startPos).StartsWith("<body>") || input.Substring(startPos).StartsWith("<BODY>")){
+            Pos += 6;
+            return new NodeBase();
         }
+        else {
+            // todo control de que hay dentro tag desconocido
+            //foreach(char c in input.Substring(startPos)){
 
+
+            //}
+            
+            // todo mejorar
+
+            throw new Exception("incorrect input" + input.Substring(startPos));
+        }
     }
 }
 
