@@ -38,26 +38,32 @@ public class NodeWriter{
 public class NodeParser{
     // todo falta parsear entities
     private int Pos = 0;
+    private string input = "";
     //todo
-    public List<INode> Parse(string input, int startPos = 0){
+    public List<INode> Parse(string value){
+        if (value != input){
+            Pos = 0;
+            input = value;
+        }
+        
         List<INode> output = new List<INode>();
-        int lastPos =  input.Length - startPos;
-        int localPos = startPos; // todo necesario?
+        int lastPos =  input.Length - Pos;
+        //int localPos gSubstring(Pos; // todo necesario?
         INode currentNode;
         string txt = "";
-        while (localPos <= lastPos){
+        while (Pos <= lastPos){
             // todo revisar condicion
-            if (input[localPos] == '<'){
-                if(!input.Substring(localPos + 1).StartsWith("/>")){
+            if (input[Pos] == '<'){
+                if(input[Pos + 1] != '/'){
                     output.Add(new Text(txt));
                     txt = "";
-                    currentNode = NodeFactory(input, Pos);
-                    currentNode.Add(Parse(input, Pos));
+                    currentNode = NodeFactory();
+                    currentNode.Add(Parse(input));
                     // Pos ya ha cambiado, entonces
                     continue;
                 }
                 else {
-                    Pos += 3;
+                    Pos = input.Substring(Pos).IndexOf(">") + 1;
                     return output;
                 }
                 // todo procesar entities
@@ -67,46 +73,45 @@ public class NodeParser{
             Pos++;
         }
         output.Add(new Text(txt));
-        // todo esta mal?
         return output;
 
     }
 
-    public INode NodeFactory(string input, int startPos){
+    public INode NodeFactory(){
         // todo var subcadena
         // todo no procesa tag desconocidos
         // todo no procesa <tag/>
-        if (input.Substring(startPos).StartsWith("<p>") || input.Substring(startPos).StartsWith("<P>")){
+        if (input.Substring(Pos).StartsWith("<p>") || input.Substring(Pos).StartsWith("<P>")){
             Pos += 3;
             return new P();
         }
-        else if (input.Substring(startPos).StartsWith("<u>") || input.Substring(startPos).StartsWith("<U>")){
+        else if (input.Substring(Pos).StartsWith("<u>") || input.Substring(Pos).StartsWith("<U>")){
             Pos += 3;
             return new U();
         }
-        else if (input.Substring(startPos).StartsWith("<i>") || input.Substring(startPos).StartsWith("<I>")){
+        else if (input.Substring(Pos).StartsWith("<i>") || input.Substring(Pos).StartsWith("<I>")){
             Pos += 3;
             return new I();
         }
-        else if (input.Substring(startPos).StartsWith("<strong>") || input.Substring(startPos).StartsWith("<STRONG>")){
+        else if (input.Substring(Pos).StartsWith("<strong>") || input.Substring(Pos).StartsWith("<STRONG>")){
             Pos += 8;
             return new Strong();
         }
         // todo esto se puede substituir por "para tag desconocido"
-        else if (input.Substring(startPos).StartsWith("<body>") || input.Substring(startPos).StartsWith("<BODY>")){
+        else if (input.Substring(Pos).StartsWith("<body>") || input.Substring(Pos).StartsWith("<BODY>")){
             Pos += 6;
             return new NodeBase();
         }
         else {
             // todo control de que hay dentro tag desconocido
-            //foreach(char c in input.Substring(startPos)){
+            //foreach(char c in input.Substring(Pos)){
 
 
             //}
             
             // todo mejorar
 
-            throw new Exception("incorrect input" + input.Substring(startPos));
+            throw new Exception("incorrect input" + input.Substring(Pos));
         }
     }
 }
